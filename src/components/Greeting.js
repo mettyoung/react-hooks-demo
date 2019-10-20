@@ -1,55 +1,61 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { ThemeContext, LocaleContext } from './context';
 import Row from './Row';
+import { ThemeContext, LocaleContext } from './context';
 
-export default function Greeting() {
-	const [name, setName] = useState('Mary');
-	const [surname, setSurname] = useState('Poppins');
-	const theme = useContext(ThemeContext);
-	const locale = useContext(LocaleContext);
-	
-	useEffect(() => {
-		document.title = name + ' ' + surname;
-	});
+const Greeting = () => {
+  const name = useFormInput('Mary');
+  const surname = useFormInput('Poppins');
+  const theme = useContext(ThemeContext);
+  const locale = useContext(LocaleContext);
+  const width = useWindowWidth();
+  const title = 'React Hooks Demo';
+  useDocumentTitle(`${name.value} ${surname.value} - ${title}`);
 
-	const [width, setWidth] = useState(window.innerWidth);
-	useEffect(() => {
-		const handleResize = () => setWidth(window.innerWidth);
-		window.addEventListener('resize', handleResize);
-
-		return () => {
-			window.removeEventListener('resize', handleResize);
-		};
-	}, []);
-
-	function handleNameChange(e) {
-		setName(e.target.value);
-	}
-
-	function handleSurnameChange(e) {
-		setSurname(e.target.value);
-	}
-	
-	return (
-		<section className={theme}>
-			<Row label="Name">
-				<input
-					value={name}
-					onChange={handleNameChange}
-				/>
-			</Row>
-			<Row label="Surname">
-				<input
-					value={surname}
-					onChange={handleSurnameChange}
-				/>
-			</Row>
-			<Row label="Language">
-				{locale}
-			</Row>
-			<Row label="Width">
-				{width}
-			</Row>
-		</section>
-	);
+  return (
+    <section className={theme}>
+      <Row label="Name">
+        <input {...name} />
+      </Row>
+      <Row label="Surname">
+        <input {...surname} />
+      </Row>
+      <Row label='Language'>
+        {locale}
+      </Row>
+      <Row label='Width'>
+        {width}
+      </Row>
+    </section>
+  );
 }
+
+const useFormInput = (initialValue) => {
+  const [value, setValue] = useState(initialValue);
+  const handleChange = (e) => {
+    setValue(e.target.value);
+  }
+  return {
+    value,
+    onChange: handleChange
+  };
+}
+
+const useDocumentTitle = (title) => {
+  useEffect(() => {
+    document.title = title;
+  });
+}
+
+const useWindowWidth = () => {
+  const [width, setWidth] = useState(window.innerWidth);
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  });
+  return width;
+}
+
+export default Greeting;
