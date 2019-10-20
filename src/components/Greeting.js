@@ -1,45 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Row from './Row';
 
-export default class Greeting extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			name: 'Mary',
-			surname: 'Poppins'
-		}
-		this.handleNameChange = this.handleNameChange.bind(this);
-		this.handleSurnameChange = this.handleSurnameChange.bind(this);
+export default function Greeting() {
+	const [name, setName] = useState('Mary');
+	const [surname, setSurname] = useState('Poppins');
+
+	function handleNameChange(e) {
+		setName(e.target.value);
+	}
+
+	function handleSurnameChange(e) {
+		setSurname(e.target.value);
 	}
 	
-	handleNameChange(e) {
-		this.setState({
-			name: e.target.value
-		});
-	}
-
-	handleSurnameChange(e) {
-		this.setState({
-			surname: e.target.value
-		});
-	}
-
-	render() {
-		return (
-			<section>
-				<Row label="Name">
-					<input
-						value={this.state.name}
-						onChange={this.handleNameChange}
-					/>
-				</Row>
+	return (
+		<section>
+			<Row label="Name">
+				<input
+					value={name}
+					onChange={handleNameChange}
+				/>
+			</Row>
 				<Row label="Surname">
 					<input
-						value={this.state.surname}
-						onChange={this.handleSurnameChange}
+						value={surname}
+						onChange={handleSurnameChange}
 					/>
 				</Row>
-			</section>
-		);
-	}
+		</section>
+	);
 }
