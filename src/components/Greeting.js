@@ -1,56 +1,38 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { ThemeContext, LocaleContext } from './context';
 import Row from './Row';
 
-export default class Greeting extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			name: 'Mary',
-			surname: 'Poppins'
-		}
-		this.handleNameChange = this.handleNameChange.bind(this);
-		this.handleSurnameChange = this.handleSurnameChange.bind(this);
+export default function Greeting() {
+	const [name, setName] = useState('Mary');
+	const [surname, setSurname] = useState('Poppins');
+	const theme = useContext(ThemeContext);
+	const locale = useContext(LocaleContext);
+
+	function handleNameChange(e) {
+		setName(e.target.value);
+	}
+
+	function handleSurnameChange(e) {
+		setSurname(e.target.value);
 	}
 	
-	handleNameChange(e) {
-		this.setState({
-			name: e.target.value
-		});
-	}
-
-	handleSurnameChange(e) {
-		this.setState({
-			surname: e.target.value
-		});
-	}
-
-	render() {
-		return (
-			<ThemeContext.Consumer>
-				{theme => (
-					<section className={theme}>
-						<Row label="Name">
-							<input
-								value={this.state.name}
-								onChange={this.handleNameChange}
-							/>
-						</Row>
-						<Row label="Surname">
-							<input
-								value={this.state.surname}
-								onChange={this.handleSurnameChange}
-							/>
-						</Row>
-						<LocaleContext.Consumer>
-							{locale => (
-								<Row label="Language">
-									{locale}
-								</Row>
-              )}
-						</LocaleContext.Consumer>
-					</section>
-				)}
-			</ThemeContext.Consumer>
-    )}
+	return (
+		<section className={theme}>
+			<Row label="Name">
+				<input
+					value={name}
+					onChange={handleNameChange}
+				/>
+			</Row>
+			<Row label="Surname">
+				<input
+					value={surname}
+					onChange={handleSurnameChange}
+				/>
+			</Row>
+			<Row label="Language">
+				{locale}
+			</Row>
+		</section>
+	);
 }
