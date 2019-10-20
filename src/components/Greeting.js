@@ -1,80 +1,55 @@
-import React from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { ThemeContext, LocaleContext } from './context';
 import Row from './Row';
 
-export default class Greeting extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			name: 'Mary',
-			surname: 'Poppins',
-			width: window.innerWidth
-		}
-		this.handleNameChange = this.handleNameChange.bind(this);
-		this.handleSurnameChange = this.handleSurnameChange.bind(this);
-		this.handleResize = this.handleResize.bind(this);
-  }
+export default function Greeting() {
+	const [name, setName] = useState('Mary');
+	const [surname, setSurname] = useState('Poppins');
+	const theme = useContext(ThemeContext);
+	const locale = useContext(LocaleContext);
 	
-	componentDidMount() {
-		window.addEventListener('resize', this.handleResize);
-		document.title = this.state.name + ' ' + this.state.surname;
+	useEffect(() => {
+		document.title = name + ' ' + surname;
+	});
+
+	const [width, setWidth] = useState(window.innerWidth);
+	useEffect(() => {
+		const handleResize = () => setWidth(window.innerWidth);
+		window.addEventListener('resize', handleResize);
+
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	}, []);
+
+	function handleNameChange(e) {
+		setName(e.target.value);
 	}
 
-	componentDidUpdate() {
-		document.title = this.state.name + ' ' + this.state.surname;	
+	function handleSurnameChange(e) {
+		setSurname(e.target.value);
 	}
-
-	componentWillUnmount() {
-		window.removeEventListener('resize', this.handleResize);
-	}
-
-	handleNameChange(e) {
-		this.setState({
-			name: e.target.value
-		});
-	}
-
-	handleSurnameChange(e) {
-		this.setState({
-			surname: e.target.value
-		});
-  }
-  
-  handleResize(e) {
-    this.setState({
-      width: window.innerWidth
-    });
-  }
-
-	render() {
-		return (
-			<ThemeContext.Consumer>
-				{theme => (
-					<section className={theme}>
-						<Row label="Name">
-							<input
-								value={this.state.name}
-								onChange={this.handleNameChange}
-							/>
-						</Row>
-						<Row label="Surname">
-							<input
-								value={this.state.surname}
-								onChange={this.handleSurnameChange}
-							/>
-						</Row>
-						<Row label="Width">
-							{this.state.width}
-						</Row>
-						<LocaleContext.Consumer>
-							{locale => (
-								<Row label="Language">
-									{locale}
-								</Row>
-              )}
-						</LocaleContext.Consumer>
-					</section>
-				)}
-			</ThemeContext.Consumer>
-    )}
+	
+	return (
+		<section className={theme}>
+			<Row label="Name">
+				<input
+					value={name}
+					onChange={handleNameChange}
+				/>
+			</Row>
+			<Row label="Surname">
+				<input
+					value={surname}
+					onChange={handleSurnameChange}
+				/>
+			</Row>
+			<Row label="Language">
+				{locale}
+			</Row>
+			<Row label="Width">
+				{width}
+			</Row>
+		</section>
+	);
 }
