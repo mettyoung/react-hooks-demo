@@ -1,3 +1,9 @@
+# Credits to the Owner
+I would like to acknowledge donycisneros who created this react-hooks-demo.
+I just added some more commits for before and after react hooks. 
+
+You can check his repository on https://github.com/donycisneros/react-hooks-demo.
+
 # React Hooks Demo
 
 At React Conf 2018, Sophie Alpert and Dan Abramov introduced **Hooks**, followed by Ryan Florence demonstrating how to refactor an application to use them.
